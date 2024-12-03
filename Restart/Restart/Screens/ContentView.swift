@@ -14,6 +14,7 @@ struct ContentView: View {
         ZStack {
             if isOnboardingViewActive {
                 OnboardingView() // True = OnboardingView
+                
             } else {
                 HomeView() // False = Home Screem
             }
