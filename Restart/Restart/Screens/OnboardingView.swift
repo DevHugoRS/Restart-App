@@ -14,6 +14,7 @@ struct OnboardingView: View {
     
     @State private var buttonWidth: Double = UIScreen.main.bounds.width - 80
     @State private var buttonOffset: CGFloat = 0
+    @State private var isAnimating: Bool = false  //A property to contror the animation.
     
 //   MARK: - BODY
     
@@ -43,7 +44,10 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 10)
                     
-                }
+                } //: HEADER
+                .opacity(isAnimating ? 1 : 0) // Ternary Operator A ? B:C
+                .offset(y: isAnimating ? 0 : -40)
+                .animation(.easeOut(duration: 1), value: isAnimating)
                 
               // MARK: - CENTER
                 
@@ -53,6 +57,8 @@ struct OnboardingView: View {
                     Image("character-1")
                         .resizable()
                         .scaledToFit()
+                        .opacity(isAnimating ? 1 : 0) // Ternary Operator A ? B:C
+                        .animation(.easeOut(duration: 0.5), value: isAnimating)
                 }// : Center
                 Spacer()
              // MARK: - FOOTER
@@ -102,7 +108,7 @@ struct OnboardingView: View {
                         .foregroundColor(.white)
                         .frame(width: 80, height: 80, alignment: .center)
                         .offset(x: buttonOffset)
-                        .gesture(
+                        .gesture( // acão para gerar movimento no button.
                             DragGesture()
                                 .onChanged { gesture in
                                     if gesture.translation.width > 0 && buttonOffset <= buttonWidth - 80 {
@@ -110,11 +116,13 @@ struct OnboardingView: View {
                                     }
                                 }
                                 .onEnded {_ in
-                                    if buttonOffset > buttonWidth / 2 {
-                                        buttonOffset = buttonWidth - 80
-                                        isOnboardingViewActive = false
-                                    } else {
-                                        buttonOffset = 0
+                                    withAnimation(Animation.easeOut(duration: 0.4)) {
+                                        if buttonOffset > buttonWidth / 2 {
+                                            buttonOffset = buttonWidth - 80
+                                            isOnboardingViewActive = false
+                                        } else {
+                                            buttonOffset = 0
+                                        }
                                     }
                                 }
                             
@@ -126,9 +134,15 @@ struct OnboardingView: View {
                 } // : FOOTER
                 .frame(width: buttonWidth, height: 80, alignment: .center)
                 .padding()
+                .opacity(isAnimating ? 1 : 0) // Ternary Operator A ? B:C
+                .offset(y: isAnimating ? 0 : 40)
+                .animation(.easeOut(duration: 1), value: isAnimating)
                 
             }//VSTACK
         }//ZSTACK
+        .onAppear(perform: {
+            isAnimating = true
+        })
     }
 }
 //   MARK: - PREVIEW
