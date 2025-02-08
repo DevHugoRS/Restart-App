@@ -133,7 +133,6 @@ struct OnboardingView: View {
                         
                         Spacer()
                     }
-                    
                     //4. CIRCLE (DRAGGABLE)
                     HStack {
                         ZStack {
